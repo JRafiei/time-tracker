@@ -10,18 +10,17 @@ class TimeTrackerTests(unittest.TestCase):
     def setUp(self) -> None:
         self.tracker = TimeTracker()
 
-    def test_log_activity_set_current_task_no_active_task(self):
+    def test_log_activity_set_current_activity_no_active_task(self):
         self.tracker.log_activity("Test Line")
-        self.assertIsInstance(self.tracker.current_task, Task)
-        self.assertEqual(self.tracker.current_task.name, "Test Line")
-        self.assertIsInstance(self.tracker.current_task.start_time, datetime)
-        self.assertIsNone(self.tracker.current_task.end_time)
-        # self.assertEqual(self.tracker.tasks, [self.tracker.current_task])
+        self.assertIsInstance(self.tracker.current_activity, Task)
+        self.assertEqual(self.tracker.current_activity.name, "Test Line")
+        self.assertIsInstance(self.tracker.current_activity.start_time, datetime)
+        self.assertIsNone(self.tracker.current_activity.end_time)
 
     def test_log_activity_with_start_time_provided(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
         self.tracker.log_activity("Test Line", start_time)
-        self.assertEqual(self.tracker.current_task.start_time, start_time)
+        self.assertEqual(self.tracker.current_activity.start_time, start_time)
 
     def test_start_time_is_less_than_now(self):
         start_time = datetime.now() + timedelta(hours=1)
@@ -31,7 +30,7 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_log_activity_active_task_exist(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_task = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
 
         with self.assertRaises(ValueError) as e:
             self.tracker.log_activity("Test Line")
@@ -39,11 +38,11 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_finish_active_task_exist(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_task = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
 
-        self.assertIsNone(self.tracker.current_task.end_time)
+        self.assertIsNone(self.tracker.current_activity.end_time)
         self.tracker.finish()
-        self.assertIsNone(self.tracker.current_task)
+        self.assertIsNone(self.tracker.current_activity)
 
     def test_finish_no_active_task(self):
         with self.assertRaises(ValueError) as e:
@@ -52,7 +51,7 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_finish_with_end_time_provided(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_task = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
 
         end_time = datetime(2024, 1, 2, 10, 30, 0)
         self.tracker.finish(end_time=end_time)
@@ -60,17 +59,17 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_end_time_is_less_than_now(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_task = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
 
         with self.assertRaises(ValueError) as e:
             end_time = datetime.now() + timedelta(hours=1)
             self.tracker.finish(end_time=end_time)
         self.assertEqual(str(e.exception), "end_time_bigger_than_now")
 
-    def test_add_current_task_to_tasks_after_finish(self):
+    def test_add_current_activity_to_tasks_after_finish(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
         task = Task(name="Current Task", start_time=start_time)
-        self.tracker.current_task = task
+        self.tracker.current_activity = task
         self.tracker.finish()
         self.assertEqual(self.tracker.tasks, [task])
         self.assertIsInstance(self.tracker.tasks[0].end_time, datetime)

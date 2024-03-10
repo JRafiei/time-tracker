@@ -60,10 +60,10 @@ class Task:
 class TimeTracker:
     def __init__(self) -> None:
         self.tasks = []
-        self.current_task = None
+        self.current_activity = None
 
     def log_activity(self, activity, start_time=None):
-        if self.current_task is not None:
+        if self.current_activity is not None:
             raise ValueError("task_in_progress")
 
         now = datetime.now()
@@ -72,10 +72,10 @@ class TimeTracker:
 
         start_time = start_time or now
         task = Task(name=activity, start_time=start_time)
-        self.current_task = task
+        self.current_activity = task
 
     def finish(self, end_time=None):
-        if not self.current_task:
+        if not self.current_activity:
             raise ValueError("no_active_task")
 
         now = datetime.now()
@@ -83,9 +83,9 @@ class TimeTracker:
             raise ValueError("end_time_bigger_than_now")
 
         end_time = end_time or now
-        self.current_task.end_time = end_time
-        self.tasks.append(self.current_task)
-        self.current_task = None
+        self.current_activity.end_time = end_time
+        self.tasks.append(self.current_activity)
+        self.current_activity = None
 
     def export(self):
         return "\n".join([task.to_line() for task in self.tasks])
