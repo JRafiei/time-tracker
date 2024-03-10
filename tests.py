@@ -31,6 +31,10 @@ class TimeTrackerTests(unittest.TestCase):
             self.tracker.current_activity.start_time.time(), expected.time()
         )
 
+    def test_log_activity_with_category_provided(self):
+        self.tracker.log_activity("Test Line", self.start_time, category_name=ActivityType.DEVELOP.value)
+        self.assertEqual(self.tracker.current_activity.category, ActivityType.DEVELOP)
+
     def test_start_time_is_less_than_now(self):
         start_time = datetime.now() + timedelta(hours=1)
         with self.assertRaises(ValueError) as e:

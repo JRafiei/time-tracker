@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from data_models import Activity
+from data_models import Activity, ActivityType
 
 
 class TimeTracker:
@@ -10,7 +10,7 @@ class TimeTracker:
         self.activities = []
         self.current_activity = None
 
-    def log_activity(self, activity, start_time=None):
+    def log_activity(self, activity, start_time=None, category_name=None):
         if self.current_activity is not None:
             raise ValueError("activity_in_progress")
 
@@ -22,7 +22,8 @@ class TimeTracker:
             raise ValueError("start_time_bigger_than_now")
 
         start_time = start_time or now
-        activity = Activity(name=activity, start_time=start_time)
+        category = ActivityType(category_name) if category_name else ActivityType.OTHER
+        activity = Activity(name=activity, start_time=start_time, category=category)
         self.current_activity = activity
 
     def finish(self, end_time=None):
