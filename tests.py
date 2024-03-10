@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 import unittest
 from datetime import datetime, timedelta
 
-from time_tracker import Activity, ActivityType, TimeTracker
+from time_tracker import TimeTracker
+from data_models import Activity, ActivityType
 
 
 class TimeTrackerTests(unittest.TestCase):
