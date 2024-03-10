@@ -64,19 +64,19 @@ class TimeTracker:
 
     def log_activity(self, activity, start_time=None):
         if self.current_activity is not None:
-            raise ValueError("task_in_progress")
+            raise ValueError("activity_in_progress")
 
         now = datetime.now()
         if start_time and start_time > now:
             raise ValueError("start_time_bigger_than_now")
 
         start_time = start_time or now
-        task = Activity(name=activity, start_time=start_time)
-        self.current_activity = task
+        activity = Activity(name=activity, start_time=start_time)
+        self.current_activity = activity
 
     def finish(self, end_time=None):
         if not self.current_activity:
-            raise ValueError("no_active_task")
+            raise ValueError("no_active_activity")
 
         now = datetime.now()
         if end_time and end_time > now:
@@ -88,7 +88,7 @@ class TimeTracker:
         self.current_activity = None
 
     def export(self):
-        return "\n".join([task.to_line() for task in self.activities])
+        return "\n".join([activity.to_line() for activity in self.activities])
 
     def initial(self, lines):
         for line in lines.split("\n"):
@@ -96,22 +96,22 @@ class TimeTracker:
                 continue
             if line.startswith("* "):
                 line = line[2:]
-            times, task = line.split(" -> ")
+            times, activity = line.split(" -> ")
             start_time, end_time = times.split(" - ")
-            self.log_activity(task, start_time=datetime.strptime(start_time, "%H:%M"))
+            self.log_activity(activity, start_time=datetime.strptime(start_time, "%H:%M"))
             self.finish(end_time=datetime.strptime(end_time, "%H:%M"))
 
     def categorize_activities(self):
         category_activities = defaultdict(list)
-        for task in self.activities:
-            category_activities[task.category.value].append(task)
+        for activity in self.activities:
+            category_activities[activity.category.value].append(activity)
 
         return category_activities
 
     def get_total_time(self, activities):
         total_time = timedelta(0)
-        for task in activities:
-            duration = task.get_duration()
+        for activity in activities:
+            duration = activity.get_duration()
             total_time += duration
         return total_time
 
@@ -121,16 +121,16 @@ class TimeTracker:
             category_times[category] = self.get_total_time(activities)
         return category_times
 
-    def get_task_times(self):
-        task_times = defaultdict(lambda: timedelta(0))
-        for task in self.activities:
-            duration = task.get_duration()
-            task_times[str(task)] += duration
+    def get_activity_times(self):
+        activity_times = defaultdict(lambda: timedelta(0))
+        for activity in self.activities:
+            duration = activity.get_duration()
+            activity_times[str(activity)] += duration
 
-        return sorted(list(task_times.items()), key=lambda x: x[1], reverse=True)
+        return sorted(list(activity_times.items()), key=lambda x: x[1], reverse=True)
 
     def stats(self):
-        task_times = self.get_task_times()
+        activity_times = self.get_activity_times()
         category_activities = self.categorize_activities()
         category_times = self.get_category_times(category_activities)
 
@@ -138,7 +138,7 @@ class TimeTracker:
         for category, duration in category_times.items():
             stats[f"total {category} time"] = str(duration)
 
-        for task_name, duration in task_times:
-            stats["activities"][task_name] = str(duration)
+        for activity_name, duration in activity_times:
+            stats["activities"][activity_name] = str(duration)
 
         return stats
