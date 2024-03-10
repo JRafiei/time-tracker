@@ -66,6 +66,9 @@ class TimeTracker:
         if self.current_activity is not None:
             raise ValueError("activity_in_progress")
 
+        if isinstance(start_time, str):
+            start_time = datetime.strptime(start_time, "%H:%M")
+
         now = datetime.now()
         if start_time and start_time > now:
             raise ValueError("start_time_bigger_than_now")
@@ -77,6 +80,9 @@ class TimeTracker:
     def finish(self, end_time=None):
         if not self.current_activity:
             raise ValueError("no_active_activity")
+
+        if isinstance(end_time, str):
+            end_time = datetime.strptime(end_time, "%H:%M")
 
         now = datetime.now()
         if end_time and end_time > now:
@@ -98,8 +104,9 @@ class TimeTracker:
                 line = line[2:]
             times, activity = line.split(" -> ")
             start_time, end_time = times.split(" - ")
-            self.log_activity(activity, start_time=datetime.strptime(start_time, "%H:%M"))
-            self.finish(end_time=datetime.strptime(end_time, "%H:%M"))
+            self.log_activity(activity, start_time=start_time)
+            # self.finish(end_time=datetime.strptime(end_time, "%H:%M"))
+            self.finish(end_time=end_time)
 
     def categorize_activities(self):
         category_activities = defaultdict(list)
