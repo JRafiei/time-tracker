@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import unittest
 from datetime import datetime, timedelta
 
-from time_tracker import Task, TaskCategory, TimeTracker
+from time_tracker import Activity, ActivityType, TimeTracker
 
 
 class TimeTrackerTests(unittest.TestCase):
@@ -12,7 +12,7 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_log_activity_set_current_activity_no_active_task(self):
         self.tracker.log_activity("Test Line")
-        self.assertIsInstance(self.tracker.current_activity, Task)
+        self.assertIsInstance(self.tracker.current_activity, Activity)
         self.assertEqual(self.tracker.current_activity.name, "Test Line")
         self.assertIsInstance(self.tracker.current_activity.start_time, datetime)
         self.assertIsNone(self.tracker.current_activity.end_time)
@@ -30,7 +30,7 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_log_activity_active_task_exist(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Activity(name="Current Task", start_time=start_time)
 
         with self.assertRaises(ValueError) as e:
             self.tracker.log_activity("Test Line")
@@ -38,7 +38,7 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_finish_active_task_exist(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Activity(name="Current Task", start_time=start_time)
 
         self.assertIsNone(self.tracker.current_activity.end_time)
         self.tracker.finish()
@@ -51,38 +51,38 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_finish_with_end_time_provided(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Activity(name="Current Task", start_time=start_time)
 
         end_time = datetime(2024, 1, 2, 10, 30, 0)
         self.tracker.finish(end_time=end_time)
-        self.assertEqual(self.tracker.tasks[0].end_time, end_time)
+        self.assertEqual(self.tracker.activities[0].end_time, end_time)
 
     def test_end_time_is_less_than_now(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        self.tracker.current_activity = Task(name="Current Task", start_time=start_time)
+        self.tracker.current_activity = Activity(name="Current Task", start_time=start_time)
 
         with self.assertRaises(ValueError) as e:
             end_time = datetime.now() + timedelta(hours=1)
             self.tracker.finish(end_time=end_time)
         self.assertEqual(str(e.exception), "end_time_bigger_than_now")
 
-    def test_add_current_activity_to_tasks_after_finish(self):
+    def test_add_current_activity_to_activities_after_finish(self):
         start_time = datetime(2024, 1, 1, 10, 30, 0)
-        task = Task(name="Current Task", start_time=start_time)
+        task = Activity(name="Current Task", start_time=start_time)
         self.tracker.current_activity = task
         self.tracker.finish()
-        self.assertEqual(self.tracker.tasks, [task])
-        self.assertIsInstance(self.tracker.tasks[0].end_time, datetime)
+        self.assertEqual(self.tracker.activities, [task])
+        self.assertIsInstance(self.tracker.activities[0].end_time, datetime)
 
     def test_export(self):
         start_time = datetime(2024, 1, 1, 10, 0, 0)
         end_time = datetime(2024, 1, 1, 11, 30, 0)
-        task1 = Task(name="Review PRs", start_time=start_time, end_time=end_time)
+        task1 = Activity(name="Review PRs", start_time=start_time, end_time=end_time)
 
         start_time = datetime(2024, 1, 1, 12, 0, 0)
         end_time = datetime(2024, 1, 1, 13, 30, 0)
-        task2 = Task(name="Update code", start_time=start_time, end_time=end_time)
-        self.tracker.tasks = [task1, task2]
+        task2 = Activity(name="Update code", start_time=start_time, end_time=end_time)
+        self.tracker.activities = [task1, task2]
 
         lines = self.tracker.export()
         self.assertEqual(
@@ -93,26 +93,26 @@ class TimeTrackerTests(unittest.TestCase):
     def test_stats(self):
         start_time = datetime(2024, 1, 1, 10, 0, 0)
         end_time = datetime(2024, 1, 1, 10, 30, 0)
-        task1 = Task(name="Breakfast", start_time=start_time, end_time=end_time)
+        task1 = Activity(name="Breakfast", start_time=start_time, end_time=end_time)
 
         start_time = datetime(2024, 1, 1, 10, 30, 0)
         end_time = datetime(2024, 1, 1, 11, 15, 0)
-        task2 = Task(name="Breakfast update", start_time=start_time, end_time=end_time)
+        task2 = Activity(name="Breakfast update", start_time=start_time, end_time=end_time)
 
         start_time = datetime(2024, 1, 1, 12, 0, 0)
         end_time = datetime(2024, 1, 1, 13, 30, 0)
-        task3 = Task(name="Review PRs", start_time=start_time, end_time=end_time)
+        task3 = Activity(name="Review PRs", start_time=start_time, end_time=end_time)
 
         start_time = datetime(2024, 1, 1, 13, 30, 0)
         end_time = datetime(2024, 1, 1, 14, 30, 0)
-        task4 = Task(
+        task4 = Activity(
             name="Update code",
             start_time=start_time,
             end_time=end_time,
-            category=TaskCategory.DEVELOP,
+            category=ActivityType.DEVELOP,
         )
 
-        self.tracker.tasks = [task1, task2, task3, task4]
+        self.tracker.activities = [task1, task2, task3, task4]
 
         # print(self.tracker.stats())
         self.assertEqual(
@@ -122,7 +122,7 @@ class TimeTrackerTests(unittest.TestCase):
                 "total meeting time": "0:45:00",
                 "total break time": "0:30:00",
                 "total review time": "1:30:00",
-                "tasks": {
+                "activities": {
                     "[review] Review PRs": "1:30:00",
                     "[develop] Update code": "1:00:00",
                     "[meeting] Breakfast update": "0:45:00",
@@ -138,22 +138,22 @@ class TaskTestCases(unittest.TestCase):
         self.end_time = datetime(2024, 1, 1, 11, 30, 0)
 
     def test_to_line_all_values_proivded(self):
-        task = Task(
+        task = Activity(
             name="Review PRs",
             start_time=self.start_time,
             end_time=self.end_time,
-            category=TaskCategory.REVIEW,
+            category=ActivityType.REVIEW,
         )
         line = task.to_line()
         self.assertEqual(line, "[review] 10:00 - 11:30 -> Review PRs")
 
     def test_task_default_category(self):
-        task = Task(name="My Task", start_time=self.start_time, end_time=self.end_time)
-        self.assertEqual(task.category, TaskCategory.OTHER)
+        task = Activity(name="My Task", start_time=self.start_time, end_time=self.end_time)
+        self.assertEqual(task.category, ActivityType.OTHER)
 
     def test_task_use_provided_valid_category(self):
-        category = TaskCategory.MEETING
-        task = Task(
+        category = ActivityType.MEETING
+        task = Activity(
             name="My Task",
             start_time=self.start_time,
             end_time=self.end_time,
@@ -164,8 +164,8 @@ class TaskTestCases(unittest.TestCase):
     def test_task_use_provided_invalid_category(self):
 
         with self.assertRaises(AttributeError):
-            category = TaskCategory.INVALID
-            Task(
+            category = ActivityType.INVALID
+            Activity(
                 name="My Task",
                 start_time=self.start_time,
                 end_time=self.end_time,
@@ -173,14 +173,14 @@ class TaskTestCases(unittest.TestCase):
             )
 
     def test_get_duration(self):
-        task = Task(name="My Task", start_time=self.start_time, end_time=self.end_time)
+        task = Activity(name="My Task", start_time=self.start_time, end_time=self.end_time)
         self.assertEqual(task.get_duration(), timedelta(hours=1, minutes=30))
 
     def test_do_not_guess_category_if_provided(self):
-        task = Task(
+        task = Activity(
             name="Break time",
             start_time=self.start_time,
             end_time=self.end_time,
-            category=TaskCategory.DEPLOYMENT,
+            category=ActivityType.DEPLOYMENT,
         )
-        self.assertEqual(task.category, TaskCategory.DEPLOYMENT)
+        self.assertEqual(task.category, ActivityType.DEPLOYMENT)

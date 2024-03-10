@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 
 
-class TaskCategory(Enum):
+class ActivityType(Enum):
     OTHER = "other"
     MEETING = "meeting"
     DEVELOP = "develop"
@@ -18,14 +18,14 @@ class TaskCategory(Enum):
 
 
 @dataclass
-class Task:
+class Activity:
     name: str
     start_time: datetime
     end_time: datetime = None
-    category: TaskCategory = TaskCategory.OTHER
+    category: ActivityType = ActivityType.OTHER
 
     def __post_init__(self):
-        if self.category == TaskCategory.OTHER:
+        if self.category == ActivityType.OTHER:
             self.guess_category()
 
     def __repr__(self):
@@ -36,14 +36,14 @@ class Task:
 
     def guess_category(self):
         if "review" in self.name.lower():
-            self.category = TaskCategory.REVIEW
+            self.category = ActivityType.REVIEW
         elif any(
             ext in self.name.lower()
             for ext in ["breakfast update", "daily", "devcom", "meeting", "session"]
         ):
-            self.category = TaskCategory.MEETING
+            self.category = ActivityType.MEETING
         elif any(ext in self.name.lower() for ext in ["breakfast", "break time"]):
-            self.category = TaskCategory.BREAK
+            self.category = ActivityType.BREAK
 
     def to_line(self):
         time_format = "%H:%M"
@@ -59,7 +59,7 @@ class Task:
 
 class TimeTracker:
     def __init__(self) -> None:
-        self.tasks = []
+        self.activities = []
         self.current_activity = None
 
     def log_activity(self, activity, start_time=None):
@@ -71,7 +71,7 @@ class TimeTracker:
             raise ValueError("start_time_bigger_than_now")
 
         start_time = start_time or now
-        task = Task(name=activity, start_time=start_time)
+        task = Activity(name=activity, start_time=start_time)
         self.current_activity = task
 
     def finish(self, end_time=None):
@@ -84,11 +84,11 @@ class TimeTracker:
 
         end_time = end_time or now
         self.current_activity.end_time = end_time
-        self.tasks.append(self.current_activity)
+        self.activities.append(self.current_activity)
         self.current_activity = None
 
     def export(self):
-        return "\n".join([task.to_line() for task in self.tasks])
+        return "\n".join([task.to_line() for task in self.activities])
 
     def initial(self, lines):
         for line in lines.split("\n"):
@@ -101,29 +101,29 @@ class TimeTracker:
             self.log_activity(task, start_time=datetime.strptime(start_time, "%H:%M"))
             self.finish(end_time=datetime.strptime(end_time, "%H:%M"))
 
-    def categorize_tasks(self):
-        category_tasks = defaultdict(list)
-        for task in self.tasks:
-            category_tasks[task.category.value].append(task)
+    def categorize_activities(self):
+        category_activities = defaultdict(list)
+        for task in self.activities:
+            category_activities[task.category.value].append(task)
 
-        return category_tasks
+        return category_activities
 
-    def get_total_time(self, tasks):
+    def get_total_time(self, activities):
         total_time = timedelta(0)
-        for task in tasks:
+        for task in activities:
             duration = task.get_duration()
             total_time += duration
         return total_time
 
-    def get_category_times(self, category_tasks):
-        category_times = {category: [] for category in category_tasks}
-        for category, tasks in category_tasks.items():
-            category_times[category] = self.get_total_time(tasks)
+    def get_category_times(self, category_activities):
+        category_times = {category: [] for category in category_activities}
+        for category, activities in category_activities.items():
+            category_times[category] = self.get_total_time(activities)
         return category_times
 
     def get_task_times(self):
         task_times = defaultdict(lambda: timedelta(0))
-        for task in self.tasks:
+        for task in self.activities:
             duration = task.get_duration()
             task_times[str(task)] += duration
 
@@ -131,14 +131,14 @@ class TimeTracker:
 
     def stats(self):
         task_times = self.get_task_times()
-        category_tasks = self.categorize_tasks()
-        category_times = self.get_category_times(category_tasks)
+        category_activities = self.categorize_activities()
+        category_times = self.get_category_times(category_activities)
 
-        stats = {"tasks": {}}
+        stats = {"activities": {}}
         for category, duration in category_times.items():
             stats[f"total {category} time"] = str(duration)
 
         for task_name, duration in task_times:
-            stats["tasks"][task_name] = str(duration)
+            stats["activities"][task_name] = str(duration)
 
         return stats
