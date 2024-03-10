@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
 
+import re
 from collections import defaultdict
 from datetime import datetime, timedelta
+
 from data_models import Activity, ActivityType
 
 
@@ -45,15 +47,25 @@ class TimeTracker:
     def export(self):
         return "\n".join([activity.to_line() for activity in self.activities])
 
-    def initial(self, lines):
-        for line in lines.split("\n"):
-            if line == "":
-                continue
-            if line.startswith("* "):
-                line = line[2:]
-            times, activity = line.split(" -> ")
-            start_time, end_time = times.split(" - ")
-            self.log_activity(activity, start_time=start_time)
+    def parse_line(self, line):
+        if line.startswith("* "):
+            line = line[2:]
+        first_part, activity = line.split(" -> ")
+        splitted = re.sub(r"[\[\-\]]", "", first_part).split()
+        if len(splitted) == 3:
+            category_name, start_time, end_time = splitted
+        else:
+            category_name = None
+            start_time, end_time = splitted
+        return activity, category_name, start_time, end_time
+
+    def initial(self, text):
+        lines = text.strip().split("\n")
+        for line in lines:
+            activity, category_name, start_time, end_time = self.parse_line(line)
+            self.log_activity(
+                activity, start_time=start_time, category_name=category_name
+            )
             self.finish(end_time=end_time)
 
     def categorize_activities(self):

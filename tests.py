@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 import unittest
 from datetime import datetime, timedelta
 
-from time_tracker import TimeTracker
 from data_models import Activity, ActivityType
+from time_tracker import TimeTracker
 
 
 class TimeTrackerTests(unittest.TestCase):
@@ -32,7 +32,9 @@ class TimeTrackerTests(unittest.TestCase):
         )
 
     def test_log_activity_with_category_provided(self):
-        self.tracker.log_activity("Test Line", self.start_time, category_name=ActivityType.DEVELOP.value)
+        self.tracker.log_activity(
+            "Test Line", self.start_time, category_name=ActivityType.DEVELOP.value
+        )
         self.assertEqual(self.tracker.current_activity.category, ActivityType.DEVELOP)
 
     def test_start_time_is_less_than_now(self):
@@ -119,6 +121,38 @@ class TimeTrackerTests(unittest.TestCase):
             "[review] 10:00 - 11:30 -> Review PRs\n[other] 12:00 - 13:30 -> Update code",
             lines,
         )
+
+    def test_initial(self):
+        lines = "10:00 - 11:30 -> Task1\n12:00 - 13:30 -> Task2"
+
+        self.tracker.initial(lines)
+
+        self.assertEqual(self.tracker.activities[0].name, "Task1")
+        self.assertEqual(
+            self.tracker.activities[0].start_time.time(),
+            datetime.strptime("10:00", "%H:%M").time(),
+        )
+        self.assertEqual(
+            self.tracker.activities[0].end_time.time(),
+            datetime.strptime("11:30", "%H:%M").time(),
+        )
+        self.assertEqual(self.tracker.activities[0].category, ActivityType.OTHER)
+
+        self.assertEqual(self.tracker.activities[1].name, "Task2")
+        self.assertEqual(
+            self.tracker.activities[1].start_time.time(),
+            datetime.strptime("12:00", "%H:%M").time(),
+        )
+        self.assertEqual(
+            self.tracker.activities[1].end_time.time(),
+            datetime.strptime("13:30", "%H:%M").time(),
+        )
+        self.assertEqual(self.tracker.activities[1].category, ActivityType.OTHER)
+
+    def test_initial_with_category(self):
+        lines = "[review] 10:00 - 11:30 -> Review PRs"
+        self.tracker.initial(lines)
+        self.assertEqual(self.tracker.activities[0].category, ActivityType.REVIEW)
 
     def test_stats(self):
         activity1 = Activity(
