@@ -1,0 +1,40 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/PyCQA/modernize
+    rev: "0.7"
+    hooks:
+      - id: python-modernize
+        name: python-modernize
+        description: Modernizes Python code for Python 3 migration.
+        entry: python-modernize
+        args: [
+          --write,
+          --future-unicode,
+          --print-function,
+          --nofix=import,
+          --no-diffs,
+          --nobackups
+        ]
+        language: python
+        types: [python]
+  - repo: https://github.com/psf/black
+    rev: 20.8b1  # last Python 2 compatible version
+    hooks:
+      - id: black
+        additional_dependencies: ['click==8.0.4']
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.0
+    hooks:
+      - id: isort
+        additional_dependencies: ["toml"]
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        args: [--exit-zero]
+        verbose: true
