@@ -86,7 +86,7 @@ class TimeTracker:
         category_times = {category: [] for category in category_activities}
         for category, activities in category_activities.items():
             category_times[category] = self.get_total_time(activities)
-        return category_times
+        return sorted(list(category_times.items()), key=lambda x: x[1], reverse=True)
 
     def get_activity_times(self):
         activity_times = defaultdict(lambda: timedelta(0))
@@ -102,7 +102,7 @@ class TimeTracker:
         category_times = self.get_category_times(category_activities)
 
         stats = {"activities": {}}
-        for category, duration in category_times.items():
+        for category, duration in category_times:
             stats[f"total {category} time"] = str(duration)
 
         for activity_name, duration in activity_times:
