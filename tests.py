@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import json
 import unittest
 from datetime import datetime, timedelta
 
@@ -33,9 +34,9 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_log_activity_with_category_provided(self):
         self.tracker.log_activity(
-            "Test Line", self.start_time, category_name=ActivityType.DEVELOP.value
+            "Test Line", self.start_time, category_name=ActivityType.TASK.value
         )
-        self.assertEqual(self.tracker.current_activity.category, ActivityType.DEVELOP)
+        self.assertEqual(self.tracker.current_activity.category, ActivityType.TASK)
 
     def test_start_time_is_less_than_now(self):
         start_time = datetime.now() + timedelta(hours=1)
@@ -177,19 +178,22 @@ class TimeTrackerTests(unittest.TestCase):
             name="Update code",
             start_time=datetime(2024, 1, 1, 13, 30, 0),
             end_time=datetime(2024, 1, 1, 14, 30, 0),
-            category=ActivityType.DEVELOP,
+            category=ActivityType.TASK,
         )
 
         self.tracker.activities = [activity1, activity2, activity3, activity4]
 
-        # print(self.tracker.stats())
+        # print(json.dumps(self.tracker.stats(), indent=4))
         self.assertEqual(
             self.tracker.stats(),
             {
-                "total develop time": "1:00:00",
-                "total meeting time": "0:45:00",
-                "total break time": "0:30:00",
-                "total review time": "1:30:00",
+                "total_time": "3:45:00",
+                "activity_types": {
+                    "task": {"time": "1:00:00", "percent": 27},
+                    "meeting": {"time": "0:45:00", "percent": 20},
+                    "break": {"time": "0:30:00", "percent": 13},
+                    "review": {"time": "1:30:00", "percent": 40},
+                },
                 "activities": {
                     "[review] Review PRs": "1:30:00",
                     "[task] Update code": "1:00:00",

@@ -86,26 +86,39 @@ class TimeTracker:
         category_times = {category: [] for category in category_activities}
         for category, activities in category_activities.items():
             category_times[category] = self.get_total_time(activities)
-        return sorted(list(category_times.items()), key=lambda x: x[1], reverse=True)
+        return category_times
 
     def get_activity_times(self):
         activity_times = defaultdict(lambda: timedelta(0))
         for activity in self.activities:
             duration = activity.get_duration()
             activity_times[str(activity)] += duration
-
-        return sorted(list(activity_times.items()), key=lambda x: x[1], reverse=True)
+        return activity_times
 
     def stats(self):
         activity_times = self.get_activity_times()
         category_activities = self.categorize_activities()
         category_times = self.get_category_times(category_activities)
+        category_times_sorted = sorted(
+            list(category_times.items()), key=lambda x: x[1], reverse=True
+        )
+        activity_times_sorted = sorted(
+            list(activity_times.items()), key=lambda x: x[1], reverse=True
+        )
 
-        stats = {"activities": {}}
-        for category, duration in category_times:
-            stats[f"total {category} time"] = str(duration)
+        total_activity_times = sum(list(category_times.values()), timedelta(0))
+        stats = {
+            "activities": {},
+            "activity_types": defaultdict(dict),
+            "total_time": str(total_activity_times),
+        }
+        for category, duration in category_times_sorted:
+            stats["activity_types"][category]["time"] = str(duration)
+            stats["activity_types"][category]["percent"] = int(
+                round(duration / total_activity_times, 2) * 100
+            )
 
-        for activity_name, duration in activity_times:
+        for activity_name, duration in activity_times_sorted:
             stats["activities"][activity_name] = str(duration)
 
         return stats
