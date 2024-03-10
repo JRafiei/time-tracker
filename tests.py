@@ -192,7 +192,7 @@ class TimeTrackerTests(unittest.TestCase):
                 "total review time": "1:30:00",
                 "activities": {
                     "[review] Review PRs": "1:30:00",
-                    "[develop] Update code": "1:00:00",
+                    "[task] Update code": "1:00:00",
                     "[meeting] Breakfast update": "0:45:00",
                     "[break] Breakfast": "0:30:00",
                 },

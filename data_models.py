@@ -6,7 +6,7 @@ from datetime import datetime
 class ActivityType(Enum):
     OTHER = "other"
     MEETING = "meeting"
-    DEVELOP = "develop"
+    TASK = "task"
     REVIEW = "review"
     ONCALL = "oncall"
     DEPLOYMENT = "deployment"
