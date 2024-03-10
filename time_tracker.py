@@ -105,7 +105,6 @@ class TimeTracker:
             times, activity = line.split(" -> ")
             start_time, end_time = times.split(" - ")
             self.log_activity(activity, start_time=start_time)
-            # self.finish(end_time=datetime.strptime(end_time, "%H:%M"))
             self.finish(end_time=end_time)
 
     def categorize_activities(self):
