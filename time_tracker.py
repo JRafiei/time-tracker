@@ -45,6 +45,9 @@ class TimeTracker:
         if end_time > now:
             raise ValueError("end_time_bigger_than_now")
 
+        if end_time < start_time:
+            raise ValueError("end_time_less_than_start_time")
+
         self.current_activity.end_time = end_time
         self.activities.append(self.current_activity)
         self.current_activity = None

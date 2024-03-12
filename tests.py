@@ -103,7 +103,7 @@ class TimeTrackerTests(unittest.TestCase):
         self.tracker.finish(end_time=end_time)
         self.assertEqual(self.tracker.activities[0].end_time.time(), expected.time())
 
-    def test_end_time_is_less_than_now(self):
+    def test_end_time_is_bigger_than_now(self):
         self.tracker.current_activity = Activity(
             name="Current Activity", start_time=self.start_time
         )
@@ -112,6 +112,16 @@ class TimeTrackerTests(unittest.TestCase):
             end_time = datetime.now() + timedelta(hours=1)
             self.tracker.finish(end_time=end_time)
         self.assertEqual(str(e.exception), "end_time_bigger_than_now")
+
+    def test_end_time_is_less_than_start_time(self):
+        self.tracker.current_activity = Activity(
+            name="Current Activity", start_time=self.start_time
+        )
+
+        with self.assertRaises(ValueError) as e:
+            end_time = self.start_time - timedelta(hours=1)
+            self.tracker.finish(end_time=end_time)
+        self.assertEqual(str(e.exception), "end_time_less_than_start_time")
 
     def test_add_current_activity_to_activities_after_finish(self):
         activity = Activity(name="Current Activity", start_time=self.start_time)
