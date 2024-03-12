@@ -16,14 +16,16 @@ class TimeTracker:
         if self.current_activity is not None:
             raise ValueError("activity_in_progress")
 
-        if isinstance(start_time, str):
-            start_time = datetime.strptime(start_time, "%H:%M")
-
         now = datetime.now()
-        if start_time and start_time > now:
+        start_time = start_time or now
+
+        if isinstance(start_time, str):
+            temp = datetime.strptime(start_time, "%H:%M").time()
+            start_time = datetime.combine(now.date(), temp)
+
+        if start_time > now:
             raise ValueError("start_time_bigger_than_now")
 
-        start_time = start_time or now
         category = ActivityType(category_name) if category_name else ActivityType.OTHER
         activity = Activity(name=activity, start_time=start_time, category=category)
         self.current_activity = activity
@@ -32,14 +34,17 @@ class TimeTracker:
         if not self.current_activity:
             raise ValueError("no_active_activity")
 
-        if isinstance(end_time, str):
-            end_time = datetime.strptime(end_time, "%H:%M")
-
+        start_time = self.current_activity.start_time
         now = datetime.now()
-        if end_time and end_time > now:
+        end_time = end_time or now
+
+        if isinstance(end_time, str):
+            temp = datetime.strptime(end_time, "%H:%M").time()
+            end_time = datetime.combine(start_time.date(), temp)
+
+        if end_time > now:
             raise ValueError("end_time_bigger_than_now")
 
-        end_time = end_time or now
         self.current_activity.end_time = end_time
         self.activities.append(self.current_activity)
         self.current_activity = None

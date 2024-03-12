@@ -32,6 +32,23 @@ class TimeTrackerTests(unittest.TestCase):
             self.tracker.current_activity.start_time.time(), expected.time()
         )
 
+    def test_activity_duration_start_time_as_datetime_end_time_as_string(self):
+        end_time = "11:30"
+        self.tracker.log_activity("Test Line", self.start_time)
+        self.tracker.finish(end_time)
+
+        duration = self.tracker.activities[0].get_duration()
+        self.assertEqual(duration, timedelta(hours=1))
+
+    def test_activity_duration_start_time_as_string_end_time_as_datetime(self):
+        start_time = "10:30"
+        end_time = datetime.now().replace(hour=11, minute=30, second=0, microsecond=0)
+        self.tracker.log_activity("Test Line", start_time)
+        self.tracker.finish(end_time)
+
+        duration = self.tracker.activities[0].get_duration()
+        self.assertEqual(duration, timedelta(hours=1))
+
     def test_log_activity_with_category_provided(self):
         self.tracker.log_activity(
             "Test Line", self.start_time, category_name=ActivityType.TASK.value
