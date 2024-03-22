@@ -49,6 +49,13 @@ class TimeTrackerTests(unittest.TestCase):
         duration = self.tracker.activities[0].get_duration()
         self.assertEqual(duration, timedelta(hours=1))
 
+    def test_log_activity_raise_error_with_invalid_catogory_type(self):
+        with self.assertRaises(ValueError) as e:
+            self.tracker.log_activity(
+                "Test Line", self.start_time, category='string'
+            )
+        self.assertEqual(str(e.exception), "category_must_be_activity_type")
+
     def test_log_activity_with_category_provided(self):
         self.tracker.log_activity(
             "Test Line", self.start_time, category=ActivityType.TASK

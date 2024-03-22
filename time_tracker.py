@@ -12,12 +12,15 @@ class TimeTracker:
         self.activities = []
         self.current_activity = None
 
-    def log_activity(self, activity, start_time=None, category_name=None):
+    def log_activity(self, activity, start_time=None, category=None):
         if self.current_activity is not None:
             raise ValueError("activity_in_progress")
 
         now = datetime.now()
         start_time = start_time or now
+
+        if category and not isinstance(category, ActivityType):
+            raise ValueError('category_must_be_activity_type')
 
         if isinstance(start_time, str):
             temp = datetime.strptime(start_time, "%H:%M").time()
@@ -71,9 +74,8 @@ class TimeTracker:
         lines = text.strip().split("\n")
         for line in lines:
             activity, category_name, start_time, end_time = self.parse_line(line)
-            self.log_activity(
-                activity, start_time=start_time, category_name=category_name
-            )
+            category = ActivityType(category_name) if category_name else None
+            self.log_activity(activity, start_time=start_time, category=category)
             self.finish(end_time=end_time)
 
     def categorize_activities(self):
