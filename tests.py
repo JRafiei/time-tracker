@@ -51,15 +51,17 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_log_activity_with_category_provided(self):
         self.tracker.log_activity(
-            "Test Line", self.start_time, category_name=ActivityType.TASK.value
+            "Test Line", self.start_time, category=ActivityType.TASK
         )
         self.assertEqual(self.tracker.current_activity.category, ActivityType.TASK)
 
-    def test_start_time_is_less_than_now(self):
-        start_time = datetime.now() + timedelta(hours=1)
-        with self.assertRaises(ValueError) as e:
-            self.tracker.log_activity("Test Line", start_time)
-        self.assertEqual(str(e.exception), "start_time_bigger_than_now")
+    def test_log_activity_no_category_provided_no_guess(self):
+        self.tracker.log_activity("Test Line", self.start_time)
+        self.assertEqual(self.tracker.current_activity.category, ActivityType.OTHER)
+
+    def test_log_activity_no_category_provided_should_guess(self):
+        self.tracker.log_activity("Review PR", self.start_time)
+        self.assertEqual(self.tracker.current_activity.category, ActivityType.REVIEW)
 
     def test_log_activity_active_activity_exist(self):
         self.tracker.current_activity = Activity(
@@ -287,3 +289,11 @@ class ActivityTestCases(unittest.TestCase):
             category=ActivityType.DEPLOYMENT,
         )
         self.assertEqual(activity.category, ActivityType.DEPLOYMENT)
+
+    def test_guess_category_if_no_catgory_provided(self):
+        activity = Activity(
+            name="Break time",
+            start_time=self.start_time,
+            end_time=self.end_time,
+        )
+        self.assertEqual(activity.category, ActivityType.BREAK)
