@@ -26,10 +26,9 @@ class TimeTracker:
             temp = datetime.strptime(start_time, "%H:%M").time()
             start_time = datetime.combine(now.date(), temp)
 
-        if start_time > now:
+        if start_time.date() > now.date():
             raise ValueError("start_time_bigger_than_now")
 
-        category = ActivityType(category_name) if category_name else ActivityType.OTHER
         activity = Activity(name=activity, start_time=start_time, category=category)
         self.current_activity = activity
 
@@ -45,7 +44,7 @@ class TimeTracker:
             temp = datetime.strptime(end_time, "%H:%M").time()
             end_time = datetime.combine(start_time.date(), temp)
 
-        if end_time > now:
+        if end_time.date() > now.date():
             raise ValueError("end_time_bigger_than_now")
 
         if end_time < start_time:
