@@ -294,6 +294,14 @@ class ActivityTestCases(unittest.TestCase):
         )
         self.assertEqual(activity.get_duration(), timedelta(hours=1, minutes=30))
 
+    def test_duration_has_no_microseconds(self):
+        activity = Activity(
+            name="My activity",
+            start_time=datetime(2024, 1, 1, 10, 0, 5, 400),
+            end_time=datetime(2024, 1, 1, 11, 30, 32, 1000)
+        )
+        self.assertEqual(activity.get_duration(), timedelta(hours=1, minutes=30, seconds=27))
+
     def test_do_not_guess_category_if_provided(self):
         activity = Activity(
             name="Break time",

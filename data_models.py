@@ -1,6 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class ActivityType(Enum):
@@ -54,4 +54,6 @@ class Activity:
         )
 
     def get_duration(self):
-        return self.end_time - self.start_time
+        duration = self.end_time - self.start_time
+        duration -= timedelta(microseconds=duration.microseconds)
+        return duration
