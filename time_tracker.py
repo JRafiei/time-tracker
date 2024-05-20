@@ -32,6 +32,27 @@ class TimeTracker:
         activity = Activity(name=activity, start_time=start_time, category=category)
         self.current_activity = activity
 
+    def log_task(self, activity, start_time=None):
+        self.log_activity(activity, start_time, category=ActivityType.TASK)
+
+    def log_review(self, activity, start_time=None):
+        self.log_activity(activity, start_time, category=ActivityType.REVIEW)
+
+    def log_meeting(self, activity, start_time=None):
+        self.log_activity(activity, start_time, category=ActivityType.MEETING)
+
+    def log_oncall(self, activity, start_time=None):
+        self.log_activity(activity, start_time, category=ActivityType.ONCALL)
+
+    def log_bms(self, activity, start_time=None):
+        self.log_activity(activity, start_time, category=ActivityType.BMS)
+
+    def log_deployment(self, activity, start_time=None):
+        self.log_activity(activity, start_time, category=ActivityType.DEPLOYMENT)
+
+    def log_learning(self, activity, start_time=None):
+        self.log_activity(activity, start_time, category=ActivityType.LEARNING)
+
     def finish(self, end_time=None):
         if not self.current_activity:
             raise ValueError("no_active_activity")
