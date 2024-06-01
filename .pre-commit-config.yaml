@@ -4,20 +4,24 @@ repos:
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
+      - id: debug-statements
       - id: trailing-whitespace
-  - repo: https://github.com/psf/black
-    rev: 20.8b1  # last Python 2 compatible version
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 24.1.0
     hooks:
       - id: black
-        additional_dependencies: ['click==8.0.4']
+        # It is recommended to specify the latest version of Python
+        # supported by your project here
+        language_version: python3.10
+        args: ["--skip-string-normalization", "--line-length=88"]
   - repo: https://github.com/PyCQA/isort
     rev: 5.13.0
     hooks:
       - id: isort
-        additional_dependencies: ["toml"]
+        args: ["--profile", "black"]
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
       - id: flake8
-        args: [--exit-zero]
+        args: ["--select=F841,E121", "--show-source", "--statistics"]
         verbose: true
