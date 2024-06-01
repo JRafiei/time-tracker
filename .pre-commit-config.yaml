@@ -5,23 +5,6 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/PyCQA/modernize
-    rev: "0.7"
-    hooks:
-      - id: python-modernize
-        name: python-modernize
-        description: Modernizes Python code for Python 3 migration.
-        entry: python-modernize
-        args: [
-          --write,
-          --future-unicode,
-          --print-function,
-          --nofix=import,
-          --no-diffs,
-          --nobackups
-        ]
-        language: python
-        types: [python]
   - repo: https://github.com/psf/black
     rev: 20.8b1  # last Python 2 compatible version
     hooks:
