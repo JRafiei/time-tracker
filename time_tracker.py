@@ -20,7 +20,7 @@ class TimeTracker:
         start_time = start_time or now
 
         if category and not isinstance(category, ActivityType):
-            raise ValueError('category_must_be_activity_type')
+            raise ValueError("category_must_be_activity_type")
 
         if isinstance(start_time, str):
             temp = datetime.strptime(start_time, "%H:%M").time()

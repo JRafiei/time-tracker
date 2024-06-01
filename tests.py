@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-import json
 import unittest
 from datetime import datetime, timedelta
 
@@ -51,9 +50,7 @@ class TimeTrackerTests(unittest.TestCase):
 
     def test_log_activity_raise_error_with_invalid_catogory_type(self):
         with self.assertRaises(ValueError) as e:
-            self.tracker.log_activity(
-                "Test Line", self.start_time, category='string'
-            )
+            self.tracker.log_activity("Test Line", self.start_time, category="string")
         self.assertEqual(str(e.exception), "category_must_be_activity_type")
 
     def test_log_activity_with_category_provided(self):
@@ -108,7 +105,7 @@ class TimeTrackerTests(unittest.TestCase):
         self.tracker.finish(end_time=end_time)
         self.assertEqual(self.tracker.activities[0].end_time, end_time)
 
-    def test_log_activity_with_start_time_provided_as_string(self):
+    def test_log_activity_with_end_time_provided_as_string(self):
         self.tracker.current_activity = Activity(
             name="Current Activity", start_time=self.start_time
         )
@@ -298,9 +295,11 @@ class ActivityTestCases(unittest.TestCase):
         activity = Activity(
             name="My activity",
             start_time=datetime(2024, 1, 1, 10, 0, 5, 400),
-            end_time=datetime(2024, 1, 1, 11, 30, 32, 1000)
+            end_time=datetime(2024, 1, 1, 11, 30, 32, 1000),
         )
-        self.assertEqual(activity.get_duration(), timedelta(hours=1, minutes=30, seconds=27))
+        self.assertEqual(
+            activity.get_duration(), timedelta(hours=1, minutes=30, seconds=27)
+        )
 
     def test_do_not_guess_category_if_provided(self):
         activity = Activity(

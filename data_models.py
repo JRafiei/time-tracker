@@ -1,6 +1,6 @@
-from enum import Enum
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from enum import Enum
 
 
 class ActivityType(Enum):
