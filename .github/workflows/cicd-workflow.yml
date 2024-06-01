@@ -3,6 +3,8 @@
 
 name: Python application
 
+run-name: ${{ github.actor }} is learning GitHub Actions
+
 on:
   push:
     branches: [ "main" ]
@@ -36,4 +38,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        python -m unittest tests
+        python -m unittest tests > output.log
+    - name: Upload output file
+      uses: actions/upload-artifact@v4
+      with:
+        name: output-log-file
+        path: output.log
