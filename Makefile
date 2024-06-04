@@ -36,7 +36,7 @@ setup: setup_system_pkgs setup_poetry
 test: setup
 	@echo
 	@echo "Running tests..."
-	poetry run pytest -v
+	python -m unittest tests
 
 clean:
 	poetry env remove 3.7.5 || true
