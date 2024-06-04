@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+gem 'ffi', '1.9.10'
+gem 'sass', '3.4.16'
+gem 'compass', '1.0.3'
