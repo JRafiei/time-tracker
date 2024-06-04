@@ -16,6 +16,14 @@ on:
   pull_request:
     branches:
       - 'main'
+  
+  workflow_dispatch:
+    inputs:
+      SKIP_UNIT_TESTS:
+        description: 'Skip unit tests'
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
@@ -51,7 +59,10 @@ jobs:
       #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics > output.log
 
       - name: Test with pytest
+        env:
+          SKIP_TESTS: ${{github.event.inputs.SKIP_UNIT_TESTS}}
         run: |
+          echo "$SKIP_TESTS"
           make test
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
