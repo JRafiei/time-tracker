@@ -66,6 +66,8 @@ jobs:
           LC_ALL: de_DE.UTF-8
         run: |
           echo "$SKIP_TESTS"
+          sudo locale-gen ${{ env.LANG }}
+          sudo update-locale LANG=${{ env.LANG }}
       #     echo de_DE.UTF-8 UTF-8 | sudo tee -a /etc/locale.gen
       #     sudo locale-gen
       #     export MYOB_REDIS_SESSIONS_HOST=localhost
