@@ -61,12 +61,12 @@ jobs:
       - name: Test with pytest
         env:
           SKIP_TESTS: ${{github.event.inputs.SKIP_UNIT_TESTS}}
+          LANGUAGE: de_DE.UTF-8
+          LANG: de_DE.UTF-8
         run: |
           echo "$SKIP_TESTS"
           sudo locale-gen de_DE.UTF-8
           sudo update-locale LANG=de_DE.UTF-8
-          export LANGUAGE=de_DE.UTF-8
-          export LANG=de_DE.UTF-8
           echo "========="
           echo $LC_ALL
           echo "========="
