@@ -64,6 +64,15 @@ jobs:
         run: |
           echo "$SKIP_TESTS"
           make test
+          echo "==========="
+          echo "PWD"
+          pwd
+          echo "==========="
+          echo "ls /"
+          ls /
+          echo "==========="
+          echo "ls ."
+          ls 
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
       #   with:
