@@ -63,11 +63,11 @@ jobs:
           SKIP_TESTS: ${{github.event.inputs.SKIP_UNIT_TESTS}}
           LANGUAGE: de_DE.UTF-8
           LANG: de_DE.UTF-8
-          LC_ALL: de_DE.UTF-8
         run: |
           echo "$SKIP_TESTS"
-          sudo locale-gen ${{ env.LANG }}
-          sudo update-locale LANG=${{ env.LANG }}
+          export LC_ALL="${{ env.LANG }}"
+          export LC_CTYPE="${{ env.LANG }}"
+          sudo dpkg-reconfigure locales
       #     echo de_DE.UTF-8 UTF-8 | sudo tee -a /etc/locale.gen
       #     sudo locale-gen
       #     export MYOB_REDIS_SESSIONS_HOST=localhost
