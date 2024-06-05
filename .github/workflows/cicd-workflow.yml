@@ -64,14 +64,14 @@ jobs:
           LANGUAGE: de_DE.UTF-8
           LANG: de_DE.UTF-8
         run: |
+          #!/bin/bash -e
           echo "$SKIP_TESTS"
-          sudo locale-gen de_DE.UTF-8
-          sudo update-locale LANG=de_DE.UTF-8
-          echo "========="
-          echo $LC_ALL
+          sudo locale-gen ${{env.LANG}}
+          sudo update-locale LANG=${{env.LANG}}
           echo "========="
           echo $LANG
           echo "========="
+          exit 1
           echo $LANGUAGE
           echo "========="
       #     export MYOB_REDIS_SESSIONS_HOST=localhost
