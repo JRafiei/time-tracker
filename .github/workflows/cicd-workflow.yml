@@ -68,11 +68,11 @@ jobs:
           echo "PWD"
           pwd
           echo "==========="
-          echo "ls /"
-          ls /
+          echo "ls -a /"
+          ls -a /
           echo "==========="
-          echo "ls ."
-          ls 
+          echo "ls -a ."
+          ls -a 
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
       #   with:

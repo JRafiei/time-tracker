@@ -24,12 +24,12 @@ setup_poetry:
 	@curl -sSL https://install.python-poetry.org | python3 - --version 1.8.2
 
 setup: setup_system_pkgs setup_poetry
-	@echo
-	@echo "Installing ruby gems and python packages..."
-	@sudo gem install bundler:1.16.1
-	@sudo gem install set -v 1.0.3
-	@sudo gem install sorted_set
-	@sudo bundle _1.16.1_ install --gemfile=./requirements/Gemfile
+	# @echo
+	# @echo "Installing ruby gems and python packages..."
+	# @sudo gem install bundler:1.16.1
+	# @sudo gem install set -v 1.0.3
+	# @sudo gem install sorted_set
+	# @sudo bundle _1.16.1_ install --gemfile=./requirements/Gemfile
 	@poetry env use 3.7.5
 	@poetry install
 
