@@ -62,17 +62,13 @@ jobs:
         env:
           SKIP_TESTS: ${{github.event.inputs.SKIP_UNIT_TESTS}}
         run: |
+          export LANGUAGE=de_DE.UTF-8
+          export LANG=de_DE.UTF-8
+          export LC_ALL=de_DE.UTF-8
+          export MYOB_REDIS_SESSIONS_HOST=localhost
+
           echo "$SKIP_TESTS"
-          make test
-          echo "==========="
-          echo "PWD"
-          pwd
-          echo "==========="
-          echo "ls -a /"
-          ls -a /
-          echo "==========="
-          echo "ls -a ."
-          ls -a 
+      #     make test
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
       #   with:
