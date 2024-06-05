@@ -62,6 +62,8 @@ jobs:
         env:
           SKIP_TESTS: ${{github.event.inputs.SKIP_UNIT_TESTS}}
         run: |
+          echo "de_DE.UTF-8 UTF-8" > /etc/locale.gen
+          locale-gen
           export LANGUAGE=de_DE.UTF-8
           export LANG=de_DE.UTF-8
           export LC_ALL=de_DE.UTF-8
