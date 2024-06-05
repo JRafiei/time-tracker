@@ -65,9 +65,6 @@ jobs:
           echo "$SKIP_TESTS"
           sudo locale-gen de_DE.UTF-8
           sudo update-locale LANG=de_DE.UTF-8
-          export LANGUAGE=de_DE.UTF-8
-          export LANG=de_DE.UTF-8
-          export LC_ALL=de_DE.UTF-8
           echo "========="
           echo $LC_ALL
           echo "========="
