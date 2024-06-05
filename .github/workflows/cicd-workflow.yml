@@ -61,15 +61,15 @@ jobs:
       - name: Test with pytest
         env:
           SKIP_TESTS: ${{github.event.inputs.SKIP_UNIT_TESTS}}
+          LANGUAGE: de_DE.UTF-8
+          LANG: de_DE.UTF-8
+          LC_ALL: de_DE.UTF-8
         run: |
-          echo de_DE.UTF-8 UTF-8 | sudo tee -a /etc/locale.gen
-          export LANGUAGE=de_DE.UTF-8
-          export LANG=de_DE.UTF-8
-          export LC_ALL=de_DE.UTF-8
-          sudo locale-gen
-          export MYOB_REDIS_SESSIONS_HOST=localhost
-
           echo "$SKIP_TESTS"
+      #     echo de_DE.UTF-8 UTF-8 | sudo tee -a /etc/locale.gen
+      #     sudo locale-gen
+      #     export MYOB_REDIS_SESSIONS_HOST=localhost
+
       #     make test
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
