@@ -1,7 +1,6 @@
 WEBAPP = webapp
 
 setup_system_pkgs:
-	@echo
 	@echo "Setup system packages..."
 	@sudo apt-get -y update
 	@sudo apt-get -y install gnupg \
@@ -19,23 +18,19 @@ setup_system_pkgs:
 		libbz2-dev
 
 setup_poetry:
-	@echo
 	@echo "Setup poetry..."
 	@curl -sSL https://install.python-poetry.org | python3 - --version 1.8.2
 
-setup: 
-	@echo
+setup: setup_system_pkgs setup_poetry
 	@echo "Installing ruby gems and python packages..."
 	@gem install bundler:1.16.1
 	@gem install set -v 1.0.3
 	@gem install sorted_set
-	@echo ${PATH}
 	@bundle _1.16.1_ install --gemfile=./requirements/Gemfile
 	@poetry env use 3.7.5
 	@poetry install
 
 test: setup
-	@echo
 	@echo "Running tests..."
 	python -m unittest tests
 

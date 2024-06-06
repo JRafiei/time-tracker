@@ -8,6 +8,7 @@ run-name: ${{ github.actor }} is learning GitHub Actions
 env:
   PYTHON_VERSION_37: 3.7.5
   PYTHON_VERSION_38: 3.8.9
+  GEM_HOME: "${{github.workspace}}/.gem" 
 
 on:
   push:
@@ -19,11 +20,50 @@ on:
   
   workflow_dispatch:
     inputs:
-      SKIP_UNIT_TESTS:
+      SYSTEM:
+        description: 'Select environment to build'
+        type: choice
+        required: true
+        default: "staging"
+        options: 
+        - 'backend'
+        - 'staging'
+        - 'production'
+      SKIP_TESTS:
         description: 'Skip unit tests'
         type: boolean
         required: true
         default: false
+      PACKER_GIT_BRANCH:
+        description: 'Name of Github branch to use'
+        required: true
+        default: 'master'
+      PACKER_GIT_TAG:
+        description: 'To use a Git commit tag, enter the tag name here'
+        required: true
+        default: ''
+      PYTEST_ADDOPTS:
+        description: 'Pytest options set. "-x" is fail fast'
+        type: choice
+        required: true
+        default: " "
+        options: 
+        - '-x'
+        - " "
+      BUILD_AMI:
+        description: 'Should we build an AMI?'
+        type: boolean
+        required: true
+        default: true
+      PACKER_ZONE:
+        description: 'If BUILD_AMI is checked, select which availability zone for Packer build'
+        type: choice
+        required: true
+        default: 'zone-1'
+        options: 
+        - 'zone-1'
+        - 'zone-2'
+        - 'zone-3'
 
 permissions:
   contents: read
@@ -60,21 +100,22 @@ jobs:
 
       - name: Test with pytest
         env:
-          SKIP_TESTS: ${{github.event.inputs.SKIP_UNIT_TESTS}}
+          SKIP_TESTS: ${{github.event.inputs.SKIP_TESTS || 'false'}}
           LANGUAGE: de_DE.UTF-8
           LANG: de_DE.UTF-8
         run: |
           #!/bin/bash -e
+          export PATH=$GEM_HOME/bin/:$PATH
+          echo "==== PATH ===="
+          echo $PATH
+          echo "=============="
+          echo "==== SKIP_TESTS ======"
           echo "$SKIP_TESTS"
+          echo "=== SKIP_TESTS context ====="
+          echo "${{github.event.inputs.SKIP_TESTS}}"
+          echo "=============="
           sudo locale-gen ${{env.LANG}}
           sudo update-locale LANG=${{env.LANG}}
-          export GEM_HOME="$HOME/.gem" 
-          export PATH=$GEM_HOME/bin/:$PATH
-          echo "========="
-          echo $GEM_HOME
-          echo "========="
-          echo $PATH
-          echo "========="
           make test
 
       # - name: Upload output file
