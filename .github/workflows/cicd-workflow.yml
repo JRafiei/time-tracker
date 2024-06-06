@@ -69,9 +69,8 @@ jobs:
           sudo locale-gen ${{env.LANG}}
           sudo update-locale LANG=${{env.LANG}}
           echo "========="
-          ls -a $HOME
-          mkdir "$HOME/.gem"
           echo $GEM_HOME
+          echo "========="
           export GEM_HOME="$HOME/.gem" 
           echo $GEM_HOME
           echo "========="
