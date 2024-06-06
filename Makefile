@@ -29,7 +29,9 @@ setup: setup_system_pkgs setup_poetry
 	@gem install bundler:1.16.1
 	@gem install set -v 1.0.3
 	@gem install sorted_set
-	@bundle install --gemfile=./requirements/Gemfile
+	@compgen -ac
+	@bash -c "compgen -ac"
+	@bundle _1.16.1_ install --gemfile=./requirements/Gemfile
 	@poetry env use 3.7.5
 	@poetry install
 
