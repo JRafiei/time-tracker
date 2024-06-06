@@ -23,13 +23,13 @@ setup_poetry:
 	@echo "Setup poetry..."
 	@curl -sSL https://install.python-poetry.org | python3 - --version 1.8.2
 
-setup: setup_system_pkgs setup_poetry
+setup: 
 	@echo
 	@echo "Installing ruby gems and python packages..."
 	@gem install bundler:1.16.1
 	@gem install set -v 1.0.3
 	@gem install sorted_set
-	@compgen -ac
+	@ls $GEM_HOME
 	@bash -c "compgen -ac"
 	@bundle _1.16.1_ install --gemfile=./requirements/Gemfile
 	@poetry env use 3.7.5
