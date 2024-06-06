@@ -69,6 +69,7 @@ jobs:
           sudo locale-gen ${{env.LANG}}
           sudo update-locale LANG=${{env.LANG}}
           echo "========="
+          echo pwd
           echo $LANG
           echo "========="
           exit 1
