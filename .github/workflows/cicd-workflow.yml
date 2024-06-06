@@ -69,13 +69,12 @@ jobs:
           sudo locale-gen ${{env.LANG}}
           sudo update-locale LANG=${{env.LANG}}
           echo "========="
-          echo pwd
-          pwd
-          echo $LANG
+          ls -a $HOME
+          mkdir "$HOME/.gem"
+          echo $GEM_HOME
+          export GEM_HOME="$HOME/.gem" 
+          echo $GEM_HOME
           echo "========="
-          echo $LANGUAGE
-          echo "========="
-          mkdir ~/.gem
           make test
 
       # - name: Upload output file
