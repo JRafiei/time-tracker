@@ -54,6 +54,7 @@ on:
         required: false
         default: ""
         options: 
+          - ''
           - '-x'
       BUILD_AMI:
         description: 'Should we build an AMI?'
