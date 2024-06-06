@@ -45,11 +45,10 @@ on:
       PYTEST_ADDOPTS:
         description: 'Pytest options set. "-x" is fail fast'
         type: choice
-        required: true
-        default: " "
+        required: false
+        default: ""
         options: 
-        - '-x'
-        - " "
+          - '-x'
       BUILD_AMI:
         description: 'Should we build an AMI?'
         type: boolean
@@ -61,9 +60,9 @@ on:
         required: true
         default: 'zone-1'
         options: 
-        - 'zone-1'
-        - 'zone-2'
-        - 'zone-3'
+          - 'zone-1'
+          - 'zone-2'
+          - 'zone-3'
 
 permissions:
   contents: read
@@ -75,8 +74,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{github.ref}}
 
       - name: Set up Python
         uses: actions/setup-python@v5
