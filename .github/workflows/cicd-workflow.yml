@@ -75,9 +75,8 @@ jobs:
           echo "========="
           echo $LANGUAGE
           echo "========="
-      #     export MYOB_REDIS_SESSIONS_HOST=localhost
+          make test
 
-      #     make test
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
       #   with:
