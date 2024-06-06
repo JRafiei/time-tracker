@@ -9,6 +9,12 @@ env:
   PYTHON_VERSION_37: 3.7.5
   PYTHON_VERSION_38: 3.8.9
   GEM_HOME: "${{github.workspace}}/.gem" 
+  SKIP_UNIT_TESTS: ${{inputs.SKIP_TESTS || 'false'}}
+  PACKER_GIT_BRANCH: ${{inputs.PACKER_GIT_BRANCH || 'master'}}
+  PACKER_GIT_TAG: ${{inputs.PACKER_GIT_TAG || ''}}
+  PYTEST_ADDOPTS: ${{inputs.PYTEST_ADDOPTS || ''}}
+  PACKER_ZONE: ${{inputs.PACKER_ZONE || 'zone-1'}}
+  BUILD_AMI: ${{inputs.BUILD_AMI || 'true'}}
 
 on:
   push:
