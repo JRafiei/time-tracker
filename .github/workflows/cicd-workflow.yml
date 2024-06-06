@@ -68,11 +68,12 @@ jobs:
           echo "$SKIP_TESTS"
           sudo locale-gen ${{env.LANG}}
           sudo update-locale LANG=${{env.LANG}}
-          echo "========="
-          echo $GEM_HOME
-          echo "========="
           export GEM_HOME="$HOME/.gem" 
+          export PATH=$GEM_HOME/bin/:$PATH
+          echo "========="
           echo $GEM_HOME
+          echo "========="
+          echo $PATH
           echo "========="
           make test
 

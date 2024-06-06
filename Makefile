@@ -29,8 +29,7 @@ setup:
 	@gem install bundler:1.16.1
 	@gem install set -v 1.0.3
 	@gem install sorted_set
-	@export PATH=${GEM_HOME}/bin/:${PATH}
-	echo ${PATH}
+	@echo ${PATH}
 	@bundle _1.16.1_ install --gemfile=./requirements/Gemfile
 	@poetry env use 3.7.5
 	@poetry install
