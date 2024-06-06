@@ -40,7 +40,7 @@ on:
         default: 'master'
       PACKER_GIT_TAG:
         description: 'To use a Git commit tag, enter the tag name here'
-        required: true
+        required: false
         default: ''
       PYTEST_ADDOPTS:
         description: 'Pytest options set. "-x" is fail fast'
@@ -115,7 +115,6 @@ jobs:
           echo "${{github.event.inputs.SKIP_TESTS}}"
           echo "=============="
           sudo locale-gen ${{env.LANG}}
-          sudo update-locale LANG=${{env.LANG}}
           make test
 
       # - name: Upload output file
