@@ -70,9 +70,9 @@ jobs:
           sudo update-locale LANG=${{env.LANG}}
           echo "========="
           echo pwd
+          pwd
           echo $LANG
           echo "========="
-          exit 1
           echo $LANGUAGE
           echo "========="
       #     export MYOB_REDIS_SESSIONS_HOST=localhost
