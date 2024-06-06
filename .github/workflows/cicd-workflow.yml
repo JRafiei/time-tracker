@@ -75,6 +75,7 @@ jobs:
           echo "========="
           echo $LANGUAGE
           echo "========="
+          mkdir ~/.gem
           make test
 
       # - name: Upload output file
