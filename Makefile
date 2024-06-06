@@ -27,8 +27,9 @@ setup:
 	@echo
 	@echo "Installing ruby gems and python packages..."
 	@gem install bundler:1.16.1
-	@ls $(GEM_HOME)/bin
-	@bash -c "compgen -ac"
+	@gem install set -v 1.0.3
+	@gem install sorted_set
+	@export PATH=${GEM_HOME}/bin/:${PATH}
 	@bundle _1.16.1_ install --gemfile=./requirements/Gemfile
 	@poetry env use 3.7.5
 	@poetry install
