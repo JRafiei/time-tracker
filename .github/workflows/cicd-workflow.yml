@@ -3,7 +3,7 @@
 
 name: Python application
 
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: "Run #${{ github.run_number }} on ${{github.ref_name}} by @${{ github.actor }}"
 
 env:
   PYTHON_VERSION_37: 3.7.5
