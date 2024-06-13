@@ -6,8 +6,7 @@ name: Python application
 run-name: "Run #${{ github.run_number }} on ${{github.ref_name}} by @${{ github.actor }}"
 
 env:
-  PYTHON_VERSION_37: 3.7.5
-  PYTHON_VERSION_38: 3.8.9
+  PYTHON_VERSION: 3.10
   GEM_HOME: "${{github.workspace}}/.gem" 
   SKIP_UNIT_TESTS: ${{inputs.SKIP_TESTS || 'false'}}
   PACKER_GIT_BRANCH: ${{inputs.PACKER_GIT_BRANCH || 'master'}}
@@ -81,13 +80,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Checkout repo 2
+        uses: actions/checkout@v4
+        with:
+          repository: JRafiei/presentaion
+          path: presentaion
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: |
-            ${{env.PYTHON_VERSION_37}} 
-            ${{env.PYTHON_VERSION_38}} 
+            ${{env.PYTHON_VERSION}} 
 
       # - name: Install dependencies
       #   run: |
@@ -109,17 +115,11 @@ jobs:
           LANG: de_DE.UTF-8
         run: |
           #!/bin/bash -e
-          export PATH=$GEM_HOME/bin/:$PATH
-          echo "==== PATH ===="
-          echo $PATH
-          echo "=============="
-          echo "==== SKIP_TESTS ======"
-          echo "$SKIP_TESTS"
-          echo "=== SKIP_TESTS context ====="
-          echo "${{github.event.inputs.SKIP_TESTS}}"
+          echo "==== INFO ===="
+          pwd
+          ls
           echo "=============="
           sudo locale-gen ${{env.LANG}}
-          make test
 
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
