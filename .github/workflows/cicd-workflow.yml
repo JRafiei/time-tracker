@@ -117,7 +117,9 @@ jobs:
           #!/bin/bash -e
           echo "==== INFO ===="
           pwd
-          ls
+          ls main
+          echo "=============="
+          ls presentaion
           echo "=============="
           sudo locale-gen ${{env.LANG}}
 
