@@ -80,14 +80,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        # with:
-        #   path: main
+        with:
+          path: main
 
-      # - name: Checkout repo 2
-      #   uses: actions/checkout@v4
-      #   with:
-      #     repository: JRafiei/presentaion
-      #     path: presentaion
+      - name: Checkout repo 2
+        uses: actions/checkout@v4
+        with:
+          repository: JRafiei/presentaion
+          path: presentaion
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -108,20 +108,21 @@ jobs:
       #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
       #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics > output.log
 
-      - name: Test with pytest
-        env:
-          SKIP_TESTS: ${{github.event.inputs.SKIP_TESTS || 'false'}}
-          LANGUAGE: de_DE.UTF-8
-          LANG: de_DE.UTF-8
+      - name: Work in main repo
+        working-directory: ./main
         run: |
-          #!/bin/bash -e
-          echo "==== INFO ===="
           pwd
+          echo "==== INFO ===="
           ls 
           echo "=============="
-          ls main
+
+      - name: Work in presentation repo
+        working-directory: ./presentaion
+        run: |
+          pwd
+          echo "==== INFO ===="
+          ls 
           echo "=============="
-          sudo locale-gen ${{env.LANG}}
 
       # - name: Upload output file
       #   uses: actions/upload-artifact@v4
