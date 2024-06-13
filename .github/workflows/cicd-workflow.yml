@@ -83,11 +83,11 @@ jobs:
         with:
           path: main
 
-      - name: Checkout repo 2
-        uses: actions/checkout@v4
-        with:
-          repository: JRafiei/presentaion
-          path: presentaion
+      # - name: Checkout repo 2
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: JRafiei/presentaion
+      #     path: presentaion
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -117,9 +117,9 @@ jobs:
           #!/bin/bash -e
           echo "==== INFO ===="
           pwd
-          ls main
+          ls 
           echo "=============="
-          ls presentaion
+          ls main
           echo "=============="
           sudo locale-gen ${{env.LANG}}
 
