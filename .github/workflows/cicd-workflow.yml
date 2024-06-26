@@ -111,7 +111,7 @@ jobs:
 
       - name: Work in main repo
         env:
-          ENV: >
+          ENV: >-
             ${{ fromJson('{
               "dev": "dev",
               "staging": "stg",
