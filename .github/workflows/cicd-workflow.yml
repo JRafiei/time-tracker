@@ -14,6 +14,7 @@ env:
   PYTEST_ADDOPTS: ${{inputs.PYTEST_ADDOPTS || ''}}
   PACKER_ZONE: ${{inputs.PACKER_ZONE || 'zone-1'}}
   BUILD_AMI: ${{inputs.BUILD_AMI || 'true'}}
+  SYSTEM: ${{ inputs.SYSTEM || 'dev' }}
 
 on:
   push:
@@ -109,6 +110,14 @@ jobs:
       #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics > output.log
 
       - name: Work in main repo
+        env:
+          ENV: >
+            ${{ fromJson('{
+              "dev": "dev",
+              "staging": "stg",
+              "production": "prd"
+            }')[env.SYSTEM] }}
+          FOV: 'fov'
         working-directory: ./main
         run: |
           pwd
