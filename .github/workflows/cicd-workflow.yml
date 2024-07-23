@@ -76,6 +76,7 @@ permissions:
 
 jobs:
   build:
+    if: ${{ inputs.BUILD_AMI }}
     runs-on: ubuntu-20.04
 
     steps:
