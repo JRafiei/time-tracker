@@ -76,7 +76,7 @@ permissions:
 
 jobs:
   build:
-    if: ${{ inputs.BUILD_AMI }}
+    if: ${{ inputs.BUILD_AMI || github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-20.04
 
     steps:
