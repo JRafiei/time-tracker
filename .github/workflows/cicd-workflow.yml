@@ -83,11 +83,14 @@ permissions:
 jobs:
   build:
     if: >-
-      (!inputs.BUILD_AMI) &&
+      (inputs.BUILD_AMI) ||
       (
-        github.event.action == 'opened' ||
-        github.event.action == 'reopened' ||
-        !github.event.pull_request.draft
+        github.event_name != 'workflow_dispatch' &&
+        (
+          github.event.action == 'opened' ||
+          github.event.action == 'reopened' ||
+          !github.event.pull_request.draft
+        )
       )
     runs-on: ubuntu-20.04
 
