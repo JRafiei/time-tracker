@@ -75,7 +75,7 @@ permissions:
 
 jobs:
   build:
-    if: ${{ !inputs.BUILD_AMI }}
+    if: ${{ !github.event.pull_request.draft && !inputs.BUILD_AMI }}
     runs-on: ubuntu-20.04
 
     steps:
