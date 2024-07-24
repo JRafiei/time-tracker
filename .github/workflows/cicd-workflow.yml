@@ -128,7 +128,7 @@ jobs:
       - name: Work in main repo
         env:
           BUILD_AMI: ${{ inputs.BUILD_AMI }}
-          CONDITION: >-
+          CONDITION: |
             (inputs.BUILD_AMI) ||
             (
               github.event_name != 'workflow_dispatch' &&
