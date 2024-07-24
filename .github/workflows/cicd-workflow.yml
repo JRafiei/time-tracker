@@ -82,7 +82,13 @@ permissions:
 
 jobs:
   build:
-    if: ${{ !github.event.pull_request.draft && !inputs.BUILD_AMI }}
+    if: >-
+      (!inputs.BUILD_AMI) &&
+      (
+        github.event.action == 'opened' ||
+        github.event.action == 'reopened' ||
+        !github.event.pull_request.draft
+      )
     runs-on: ubuntu-20.04
 
     steps:
