@@ -57,3 +57,7 @@ class Activity:
         duration = self.end_time - self.start_time
         duration -= timedelta(microseconds=duration.microseconds)
         return duration
+
+
+class Job:
+    pass
