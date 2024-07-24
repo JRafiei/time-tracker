@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import json
 import re
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -152,3 +153,27 @@ class TimeTracker:
             stats["activities"][activity_name] = str(duration)
 
         return stats
+
+
+lines = """
+[other] 08:00 - 08:10 -> Prepare for the Day
+[task] 08:10 - 09:00 -> Analyze venues with missing journals
+[task] 09:40 - 10:30 -> Analyze venues with missing journals
+[meeting] 10:30 - 10:50 -> Daily
+[task] 10:50 - 11:00 -> Analyze venues with missing journals
+[meeting] 11:00 - 12:00 -> Chapter meeting
+[other] 12:00 - 12:15 -> Check for a workaround to import large masterdata
+[task] 12:19 - 13:58 -> Analyze venues with missing journals
+[break] 13:58 - 14:42 -> Break time
+[other] 14:42 - 14:51 -> Look more into GH action connectivity issue
+[task] 14:51 - 16:30 -> Analyze venues with missing journals
+[meeting] 16:30 - 17:20 -> Demo session
+[review] 17:20 - 17:30 -> Review CON-1136 PR
+[task] 17:30 - 18:40 -> Analyze venues with missing journals
+"""
+
+if __name__ == "__main__":
+    tracker = TimeTracker()
+    tracker.initial(lines)
+    print(tracker.export(), '\n')
+    print(json.dumps(tracker.stats(), indent=4))

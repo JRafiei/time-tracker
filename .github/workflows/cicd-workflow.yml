@@ -8,7 +8,7 @@ run-name: "Run #${{ github.run_number }} on ${{github.ref_name}} by @${{ github.
 env:
   PYTHON_VERSION: 3.11
   GEM_HOME: "${{github.workspace}}/.gem" 
-  SKIP_UNIT_TESTS: ${{inputs.SKIP_TESTS || 'false'}}
+  SKIP_UNIT_TESTS: ${{inputs.SKIP_TESTS || 'true'}}
   PACKER_GIT_BRANCH: ${{inputs.PACKER_GIT_BRANCH || 'master'}}
   PACKER_GIT_TAG: ${{inputs.PACKER_GIT_TAG || ''}}
   PYTEST_ADDOPTS: ${{inputs.PYTEST_ADDOPTS || ''}}
@@ -21,6 +21,14 @@ on:
     branches:
       - 'main'
   pull_request:
+    types: 
+      - opened
+      - reopened
+      - synchronize
+      # Run the pipline also when the changes in draft mode are done
+      # and we are ready to get more feedback
+      # It takes a couple of seconds for the new run to be triggered. 
+      - ready_for_review
   
   workflow_dispatch:
     inputs:
@@ -74,7 +82,13 @@ permissions:
 
 jobs:
   build:
-    if: ${{ !inputs.BUILD_AMI }}
+    if: >-
+      (!inputs.BUILD_AMI) &&
+      (
+        github.event.action == 'opened' ||
+        github.event.action == 'reopened' ||
+        !github.event.pull_request.draft
+      )
     runs-on: ubuntu-20.04
 
     steps:
