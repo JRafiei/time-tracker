@@ -21,7 +21,14 @@ on:
     branches:
       - 'main'
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: 
+      - opened
+      - reopened
+      - synchronize
+      # Run the pipline also when the changes in draft mode are done
+      # and we are ready to get more feedback
+      # It takes a couple of seconds for the new run to be triggered. 
+      - ready_for_review
   
   workflow_dispatch:
     inputs:
