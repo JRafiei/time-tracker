@@ -69,7 +69,7 @@ on:
         description: 'If BUILD_AMI is checked, select which availability zone for Packer build'
         type: choice
         required: true
-        default: 'zone-1'
+        default: 'zone-2'
         options: 
           - 'zone-1'
           - 'zone-2'
